@@ -1,0 +1,24 @@
+{
+  "name": "book-store-scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./scrapers/scrape_dr.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osmnbhtyr/Book-Store-Scraper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/osmnbhtyr/Book-Store-Scraper/issues"
+  },
+  "homepage": "https://github.com/osmnbhtyr/Book-Store-Scraper#readme",
+  "dependencies": {
+    "puppeteer": "^5.5.0",
+    "scroll-to-bottomjs": "^1.1.0"
+  }
+}
