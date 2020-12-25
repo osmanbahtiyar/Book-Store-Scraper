@@ -1,24 +1,16 @@
 {
-  "name": "book-store-scraper",
+  "name": "armot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "scraper.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./scrapers/scrape_dr.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/osmnbhtyr/Book-Store-Scraper.git"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/osmnbhtyr/Book-Store-Scraper/issues"
-  },
-  "homepage": "https://github.com/osmnbhtyr/Book-Store-Scraper#readme",
   "dependencies": {
-    "puppeteer": "^5.5.0",
-    "scroll-to-bottomjs": "^1.1.0"
+    "firebase": "^8.2.1",
+    "firebase-admin": "^9.4.2",
+    "puppeteer": "^5.5.0"
   }
 }
