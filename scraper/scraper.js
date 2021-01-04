@@ -4,6 +4,8 @@ const admin = require('firebase-admin');
 
 const serviceAccount = require('./book-store-scrapper-54473-firebase-adminsdk-s3fpo-e73033ea8b.json');
 
+let scrollToBottom = require('scroll-to-bottomjs');
+
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
@@ -11,21 +13,21 @@ admin.initializeApp({
 const db = admin.firestore();
 
 db.settings({ ignoreUndefinedProperties: true });
-(async () => {
+
+const scrapWebsites = async () => {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
     var i = 0;
     var j = 0;
-    var id = 1;
 
     const myObjects = [];
 
-    //////////////////////////////////////////kitapyurdu
+    //Fetching data from kitapyurdu, because of our free database limitations we have decided to fetch only 100 pages from there
 
-    for (i = 1; i < 51; i++) {
+    for (i = 1; i < 100; i++) {
         await page.goto(
-            `https://www.kitapyurdu.com/index.php?route=product/category&filter_category_all=true&path=1&filter_in_stock=1&sort=purchased_365&order=DESC&limit=100&page=${id}`,
+            `https://www.kitapyurdu.com/index.php?route=product/category&filter_category_all=true&path=1&filter_in_stock=1&sort=purchased_365&order=DESC&limit=100&page=${i}`,
             { waitUntil: 'load', timeout: 0 }
         );
 
@@ -67,6 +69,7 @@ db.settings({ ignoreUndefinedProperties: true });
 
         const website = 'kitapyurdu';
 
+        //there are 100 books on a page, this is a standard
         for (j = 0; j < 100; j++) {
             const myName = names[j].split('/')[0];
             const myPrice = prices[j];
@@ -74,7 +77,11 @@ db.settings({ ignoreUndefinedProperties: true });
             const bookPage = myBook[j];
             const bookAuthor = authors[j];
             const bookPublisher = publishers[j];
+            const temp_search = myName.replace(/\s/g, '');
+            const search = temp_search.toLowerCase();
+
             const myObj = {
+                search_param: search,
                 book_name: myName,
                 book_price: myPrice,
                 book_image: myImg,
@@ -84,30 +91,33 @@ db.settings({ ignoreUndefinedProperties: true });
                 book_publisher: bookPublisher,
             };
             if (typeof myName !== 'undefined') {
-                const res = await db
-                    .collection(website)
-                    .doc(myName)
-                    .set(myObj)
-                    .catch((err) => {
-                        console.log('error occurred');
-                    });
-                myObjects.push(myObj);
+                try {
+                    const res = await db
+                        .collection(website)
+                        .doc(myName)
+                        .set(myObj)
+                        .catch((err) => {
+                            console.log('error occurred');
+                        });
+                    myObjects.push(myObj);
+                } catch (e) {
+                    console.log('Exception occurred');
+                }
             }
         }
 
-        console.log('Page ' + id + ' completed.');
-        id++;
+        console.log('Kitapyurdu Page ' + i + ' completed.');
     }
 
-    ////////////////////////////////////////// dr a gectim //////////////////
+    //Fetching data from d&r.
 
-    id = 1;
-
-    for (i = 1; i < 51; i++) {
+    for (i = 1; i < 71; i++) {
         await page.goto(
-            `https://www.dr.com.tr/CokSatanlar/Kitap#/page=${id}/sort=groups.group.displayorder,asc/categoryid=0/clog=4020/parentId=0/price=-1,-1`,
+            `https://www.dr.com.tr/CokSatanlar/Kitap#/page=${i}/sort=groups.group.displayorder,asc/categoryid=0/clog=4020/parentId=0/price=-1,-1`,
             { waitUntil: 'load', timeout: 0 }
         );
+
+        await page.evaluate(scrollToBottom);
 
         const names = await page.evaluate(() =>
             Array.from(
@@ -147,6 +157,7 @@ db.settings({ ignoreUndefinedProperties: true });
 
         const website = 'dr';
 
+        //there are 42 books on each page.
         for (j = 0; j < 42; j++) {
             const myName = names[j].split('/')[0];
             const myPrice = prices[j];
@@ -154,7 +165,10 @@ db.settings({ ignoreUndefinedProperties: true });
             const bookPage = myBook[j];
             const bookAuthor = authors[j];
             const bookPublisher = publishers[j];
+            const temp_search = myName.replace(/\s/g, '');
+            const search = temp_search.toLowerCase();
             const myObj = {
+                search_param: search,
                 book_name: myName,
                 book_price: myPrice,
                 book_image: myImg,
@@ -164,30 +178,32 @@ db.settings({ ignoreUndefinedProperties: true });
                 book_publisher: bookPublisher,
             };
             if (typeof myName !== 'undefined') {
-                const res = await db
-                    .collection(website)
-                    .doc(myName)
-                    .set(myObj)
-                    .catch((err) => {
-                        console.log('error occurred');
-                    });
-                myObjects.push(myObj);
+                try {
+                    const res = await db
+                        .collection(website)
+                        .doc(myName)
+                        .set(myObj)
+                        .catch((err) => {
+                            console.log('error occurred');
+                        });
+                    myObjects.push(myObj);
+                } catch (e) {
+                    console.log('Exception occurred');
+                }
             }
         }
 
-        console.log('Page ' + id + ' completed.');
-        id++;
+        console.log('Dr Page ' + i + ' completed.');
     }
 
-    ///////////////////////////////////idefixe gectim//////////////////////
-
-    id = 1;
-
-    for (i = 1; i < 51; i++) {
+    //Fetching data from idefix
+    for (i = 1; i < 83; i++) {
         await page.goto(
-            `https://www.idefix.com/CokSatanlar/Kitap#/page=${id}/sort=groups.group.displayorder,asc/categoryid=0/clog=3569/parentId=0/price=-1,-1`,
+            `https://www.idefix.com/CokSatanlar/Kitap#/page=${i}/sort=groups.group.displayorder,asc/categoryid=0/clog=3569/parentId=0/price=-1,-1`,
             { waitUntil: 'load', timeout: 0 }
         );
+
+        await page.evaluate(scrollToBottom);
 
         const names = await page.evaluate(() =>
             Array.from(document.querySelectorAll('div.image-area > img ')).map(
@@ -226,7 +242,7 @@ db.settings({ ignoreUndefinedProperties: true });
         );
 
         const website = 'idefix';
-
+        //there are 36 books on each page
         for (j = 0; j < 36; j++) {
             const myName = names[j].split('/')[0];
             const myPrice = prices[j];
@@ -234,7 +250,10 @@ db.settings({ ignoreUndefinedProperties: true });
             const bookPage = myBook[j];
             const bookAuthor = authors[j];
             const bookPublisher = publishers[j];
+            const temp_search = myName.replace(/\s/g, '');
+            const search = temp_search.toLowerCase();
             const myObj = {
+                search_param: search,
                 book_name: myName,
                 book_price: myPrice,
                 book_image: myImg,
@@ -245,19 +264,22 @@ db.settings({ ignoreUndefinedProperties: true });
             };
 
             if (typeof myName !== 'undefined') {
-                const res = await db
-                    .collection(website)
-                    .doc(myName)
-                    .set(myObj)
-                    .catch((err) => {
-                        console.log('error occurred');
-                    });
-                myObjects.push(myObj);
+                try {
+                    const res = await db
+                        .collection(website)
+                        .doc(myName)
+                        .set(myObj)
+                        .catch((err) => {
+                            console.log('error occurred');
+                        });
+                    myObjects.push(myObj);
+                } catch (e) {
+                    console.log('Exception occurred');
+                }
             }
         }
 
-        console.log('Page ' + id + ' completed.');
-        id++;
+        console.log('Idefix Page ' + i + ' completed.');
     }
 
     console.log(myObjects);
@@ -265,4 +287,10 @@ db.settings({ ignoreUndefinedProperties: true });
     console.log(myObjects.length); // adet sayısı kontrolu
 
     await browser.close();
-})();
+};
+
+//call this function repeatedly with 24 hours break
+setInterval(scrapWebsites, 86400000);
+
+//call this function immediately
+scrapWebsites();

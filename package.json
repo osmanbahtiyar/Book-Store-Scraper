@@ -4,13 +4,15 @@
   "description": "",
   "main": "scraper.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "scrap": "node ./scraper/scraper.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "firebase": "^8.2.1",
     "firebase-admin": "^9.4.2",
-    "puppeteer": "^5.5.0"
+    "puppeteer": "^5.5.0",
+    "scroll-to-bottomjs": "^1.1.0"
   }
 }

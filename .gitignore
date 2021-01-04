@@ -72,8 +72,6 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
-.book-store-scrapper-54473-firebase-adminsdk-s3fpo-e73033ea8b.json
-.deneme-898e6-firebase-adminsdk-cnwkv-eb541f03cf.json
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
