@@ -290,7 +290,7 @@ const scrapWebsites = async () => {
 };
 
 //call this function repeatedly with 24 hours break
-setInterval(scrapWebsites, 86400000);
+//setInterval(scrapWebsites, 86400000);
 
 //call this function immediately
 scrapWebsites();
