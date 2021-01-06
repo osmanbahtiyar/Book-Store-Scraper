@@ -225,7 +225,9 @@ const scrapWebsites = async () => {
 
         const myBook = await page.evaluate(() =>
             Array.from(
-                document.querySelectorAll('div.cart-product-box-view > a ')
+                document.querySelectorAll(
+                    'div.cart-product-box-view > a.product-image '
+                )
             ).map((book) => book.href)
         );
 
