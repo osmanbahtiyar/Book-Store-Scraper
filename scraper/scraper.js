@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 
 const admin = require('firebase-admin');
 
-const serviceAccount = require('./book-store-scrapper-54473-firebase-adminsdk-s3fpo-e73033ea8b.json');
+const serviceAccount = require('./book-store-e7be1-firebase-adminsdk-fo5vm-c4d7b0465a.json');
 
 let scrollToBottom = require('scroll-to-bottomjs');
 
