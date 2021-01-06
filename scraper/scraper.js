@@ -25,7 +25,7 @@ const scrapWebsites = async () => {
 
     //Fetching data from kitapyurdu, because of our free database limitations we have decided to fetch only 100 pages from there
 
-    for (i = 1; i < 100; i++) {
+    for (i = 1; i < 85; i++) {
         await page.goto(
             `https://www.kitapyurdu.com/index.php?route=product/category&filter_category_all=true&path=1&filter_in_stock=1&sort=purchased_365&order=DESC&limit=100&page=${i}`,
             { waitUntil: 'load', timeout: 0 }
